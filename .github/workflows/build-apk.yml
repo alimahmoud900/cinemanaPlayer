@@ -19,8 +19,11 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+      # The ubuntu-latest runner already ships with the Android SDK, so we skip
+      # android-actions/setup-android (it was crashing in `sdkmanager --licenses`)
+      # and just accept licenses with the preinstalled sdkmanager.
+      - name: Accept Android SDK licenses
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
 
       - name: Set up Gradle 8.9
         uses: gradle/actions/setup-gradle@v4
